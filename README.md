@@ -31,12 +31,9 @@ const site = new NextjsSite(stack, "site", {
 });
 ```
 
-Have to use `@ts-ignore` because `nodejs` is not a valid property of `NextjsSiteProps`.
-
 ```ts
 const site = new NextjsSite(stack, "site", {
   permissions: ["iot"],
-  //@ts-ignore
   cdk: {
     server: {
       copyFiles: [
