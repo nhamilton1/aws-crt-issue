@@ -6,7 +6,7 @@ export function Web({ stack, app }: StackContext) {
   const realtime = use(Realtime);
 
   const site = new NextjsSite(stack, "site", {
-    permissions: ["iot"], 
+    permissions: ["iot"],
     environment: {
       NEXT_PUBLIC_STAGE: app.stage,
       NEXT_PUBLIC_IOT_HOST: realtime.endpointAddress,
