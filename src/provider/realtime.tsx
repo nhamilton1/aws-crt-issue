@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 // https://github.com/brix/crypto-js/issues/415
 
 export function RealtimeProvider() {
-  const con =
+  const connection =
     useRef<import("aws-iot-device-sdk-v2").mqtt.MqttClientConnection>();
 
   // useEffect(() => {
@@ -83,11 +83,11 @@ export function RealtimeProvider() {
       const topic = `aws-crt-issue/${process.env.NEXT_PUBLIC_STAGE}/abc123/all/#`;
 
       connect_websocket()
-        .then((connection) => {
-          con.current = connection;
+        .then((conn) => {
+          connection.current = conn;
           if (!connection) return;
           console.log(`start subscribe`);
-          connection.subscribe(
+          connection.current?.subscribe(
             topic,
             mqtt.QoS.AtLeastOnce,
             (topic, payload) => {
@@ -107,8 +107,8 @@ export function RealtimeProvider() {
     initializeRealtime();
 
     return () => {
-      if (con.current) {
-        con.current.disconnect();
+      if (connection.current) {
+        connection.current.disconnect();
       }
     };
   }, []);
@@ -147,11 +147,13 @@ async function connect_websocket() {
     connection.on("interrupt", (error) => {
       console.log(`Connection interrupted: error=${error}`);
     });
+    
     connection.on("resume", (return_code, session_present) => {
       console.log(
         `Resumed: rc: ${return_code} existing session: ${session_present}`
       );
     });
+
     connection.on("disconnect", () => {
       console.log("Disconnected");
     });
